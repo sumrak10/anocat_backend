@@ -371,6 +371,12 @@
                 Telegram.WebApp.HapticFeedback.impactOccurred('light');
             }
             elem.classList.add('active');
+            setTimeout(() => {
+                    if (Telegram?.WebApp?.HapticFeedback?.impactOccurred) {
+                        Telegram.WebApp.HapticFeedback.impactOccurred('light');
+                    }
+                    elem.classList.remove('active');
+                }, 100);
             try {
                 navigator.share({
                     title: 'Мой профиль в AnoCat',
@@ -380,7 +386,6 @@
                     if (Telegram?.WebApp?.HapticFeedback?.impactOccurred) {
                         Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
                     }
-                    elem.classList.remove('active');
                 });
             } catch (error) {
                 console.error('Ошибка при попытке поделиться:', error);
