@@ -24,4 +24,4 @@ WORKDIR /app
 
 RUN uv sync --frozen
 
-CMD ["uv", "run", "run_app"]
+CMD ["uv", "run", "start_app.py"]

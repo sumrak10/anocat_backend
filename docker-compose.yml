@@ -3,7 +3,7 @@ services:
     build:
       context: .
     ports:
-      - "8959:8000"
+      - "8000:8000"
     depends_on:
       - db
     env_file:
