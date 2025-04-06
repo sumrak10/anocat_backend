@@ -1,0 +1,12 @@
+{% macro concrete(message, cat_id) -%}
+    <div>
+        <img src="/static/images/cats/cat {{ cat_id }}.svg" alt="cute cat image">
+        <p>{{ message }}</p>
+    </div>
+{%- endmacro %}
+{% macro random(message) -%}
+    <div class="cat-message">
+        <img src="/static/images/cats/cat {{ range(1, 22)|random }}.svg" alt="cute cat image">
+        <p>{{ message }}</p>
+    </div>
+{%- endmacro %}

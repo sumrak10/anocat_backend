@@ -1,0 +1,11 @@
+{% for stop_word_id, stop_word_text in stop_words %}
+    <div class="stop-word"
+         data-stop-word-id="{{ stop_word_id }}"
+         hx-delete="/htmx/v1/stop-words/{{ stop_word_id }}"
+         hx-target="this"
+         hx-swap="delete transition:true swap:0.2s">
+        <span class="text">{{ stop_word_text }}</span>
+        <span class="icon material-symbols-rounded">clear</span>
+        <img class="loader-icon" src="{{ static_url('/images/cat_loader.svg') }}" alt="loading...">
+    </div>
+{% endfor %}

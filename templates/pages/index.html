@@ -1,0 +1,421 @@
+{% extends "base.tmpl" %}
+{% import "macros/avatars.html" as avatars %}
+{% import "macros/cat_messages.html" as cat_messages %}
+
+{% block styles %}
+{% endblock %}
+{% block content %}
+    <div class="mail-preview-container header-bg" id="mail_preview_container">
+        <div class="mail-preview m3-elevation-light-3">
+            <div class="profile-info">
+                {{ avatars.skeleton() }}
+                <div class="profile-info__inner">
+                    <div class="profile-info__inner__namedate-container">
+                        <div class="name">
+                             Загрузка...
+                        </div>
+                        <div class="date">
+                             ...
+                        </div>
+                    </div>
+                    <div class="status">
+                        ...
+                    </div>
+                </div>
+            </div>
+            <hr class="primary">
+            <span>
+                Загрузка...
+            </span>
+        </div>
+    </div>
+    <main>
+        <div class="pop-up-notifications-container"
+             id="pop_up_notifications_container">
+        </div>
+        <header class="header-bg">
+            <div class="profile m3-elevation-light-3"
+                 hx-get="/htmx/v1/users/profile"
+                 hx-trigger="load once"
+                 hx-swap="innerHTML">
+                <div class="profile-info">
+                    {{ avatars.skeleton() }}
+                    <div class="profile-info__inner">
+                        <div class="name">
+                             Загрузка...
+                        </div>
+                        <div class="status">
+                            ...
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-buttons">
+                    <div class="button icon-button mailto-link-button">
+                        <span class="icon material-symbols-rounded">
+                            link
+                        </span>
+                    </div>
+                    <div class="button icon-button mailto-link-button">
+                        <span class="icon material-symbols-rounded">
+                            share
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="navigation-tabs">
+                <div class="navigation-tabs__left">
+                    <div class="tab text-tab m3-elevation-light-3 active"
+                         id="tab-inbox-mails"
+                         data-linked-section-id="section_inbox_mails"
+                         hx-on:click="switchTabTo(this);">
+                        <span>Входящие</span>
+                    </div>
+                    <div class="tab text-tab m3-elevation-light-3"
+                         id="tab-sent-mails"
+                         data-linked-section-id="section_sent_mails"
+                         hx-on:click="switchTabTo(this);">
+                        <span>Исходящие</span>
+                    </div>
+                </div>
+                <div class="navigation-tabs__right">
+                    <div class="tab icon-tab m3-elevation-light-3"
+                         id="tab-settings"
+                         data-linked-section-id="section_settings"
+                         hx-on:click="switchTabTo(this);">
+                        <span class="material-symbols-rounded">settings</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="sections-list">
+            <section class="tab-section ptr-container active"
+                     id="section_inbox_mails">
+                <div class="ptr">
+                    <span class="ptr-icon  material-symbols-rounded">arrow_upward</span>
+                    <span class="ptr-spinner material-symbols-rounded">cached</span>
+                </div>
+                <div class="tab-section-content ptr-content"
+                     id="section_inbox_mails_list"
+                     hx-get="/htmx/v1/mails/inbox?page=1&size=8"
+                     hx-trigger="load"
+                     hx-swap="innerHTML">
+                </div>
+            </section>
+            <section class="tab-section ptr-container"
+                     id="section_sent_mails">
+                <div class="ptr">
+                    <span class="ptr-icon material-symbols-rounded">arrow_upward</span>
+                    <span class="ptr-spinner material-symbols-rounded">cached</span>
+                </div>
+                <div class="tab-section-content ptr-content"
+                     id="section_sent_mails_list"
+                     hx-get="/htmx/v1/mails/sent?page=1&size=20"
+                     hx-trigger="load"
+                     hx-swap="innerHTML">
+                </div>
+            </section>
+            <section class="tab-section"
+                     id="section_settings">
+                <div class="tab-section-content">
+                    <div class="settings-section active" id="settings_section_menu">
+                        <div class="settings settings-menu"
+                             data-linked-section-id="settings_section_account"
+                             hx-on:click="forwardSettingsSection(this);">
+                            <span class="icon material-symbols-rounded">account_circle</span>
+                            <span class="text">Аккаунт</span>
+                            <span class="s-icon material-symbols-rounded">arrow_forward_ios</span>
+                        </div>
+                        <div class="settings settings-menu"
+                             data-linked-section-id="settings_section_privacy"
+                             hx-on:click="forwardSettingsSection(this);">
+                            <span class="icon material-symbols-rounded">shield</span>
+                            <span class="text">Приватность</span>
+                            <span class="s-icon material-symbols-rounded">arrow_forward_ios</span>
+                        </div>
+                        <div class="settings settings-menu"
+                             data-linked-section-id="settings_section_notifications"
+                             hx-on:click="forwardSettingsSection(this);">
+                            <span class="icon material-symbols-rounded">notifications_none</span>
+                            <span class="text">Уведомления</span>
+                            <span class="s-icon material-symbols-rounded">arrow_forward_ios</span>
+                        </div>
+                        <hr>
+                        {{ cat_messages.random("Это всего лишь бета-версия") }}
+<!--                        <div class="settings settings-menu"-->
+<!--                             data-linked-section-id="settings_section_about"-->
+<!--                             hx-on:click="forwardSettingsSection(this);">-->
+<!--                            <span class="icon material-symbols-rounded">question_mark</span>-->
+<!--                            <span class="text">Что такое AnoCat</span>-->
+<!--                        </div>-->
+<!--                        <hr>-->
+<!--                        <div class="settings"-->
+<!--                             data-linked-section-id="settings_section_report_bug"-->
+<!--                             hx-on:click="forwardSettingsSection(this);">-->
+<!--                            <span class="icon material-symbols-rounded">bug_report</span>-->
+<!--                            <span class="text">Сообщить об ошибке</span>-->
+<!--                        </div>-->
+                    </div>
+<!--                    FIRST LEVEL MENUS-->
+                    <div class="settings-section" id="settings_section_account">
+                        <div class="settings"
+                             data-linked-section-id="settings_section_menu"
+                             hx-on:click="backToSettingsSection(this);">
+                            <span class="icon material-symbols-rounded">arrow_back_ios</span>
+                            <span class="text">Аккаунт</span>
+                        </div>
+                        <hr>
+                        {{ cat_messages.random("Еще в разработке") }}
+                    </div>
+                    <div class="settings-section" id="settings_section_privacy">
+                        <div class="settings"
+                             data-linked-section-id="settings_section_menu"
+                             hx-on:click="backToSettingsSection(this);">
+                            <span class="icon material-symbols-rounded">arrow_back_ios</span>
+                            <span class="text">Приватность</span>
+                        </div>
+                        <hr>
+                        <div class="settings settings-menu"
+                             data-linked-section-id="settings_section_stop_words"
+                             hx-on:click="forwardSettingsSection(this);"
+                             hx-get="/htmx/v1/stop-words"
+                             hx-target="#stop_words_list">
+                            <span class="icon material-symbols-rounded">match_word</span>
+                            <span class="text">Стоп-слова</span>
+                            <span class="s-icon material-symbols-rounded">arrow_forward_ios</span>
+                        </div>
+<!--                        <div class="settings settings-menu"-->
+<!--                             data-linked-section-id="settings_section_black_list"-->
+<!--                             hx-on:click="forwardSettingsSection(this);"-->
+<!--                             hx-get="/htmx/v1/black_list"-->
+<!--                             hx-target="#black_list">-->
+<!--                            <span class="icon material-symbols-rounded">skull_list</span>-->
+<!--                            <span class="text">Черный список</span>-->
+<!--                            <span class="s-icon material-symbols-rounded">arrow_forward_ios</span>-->
+<!--                        </div>-->
+                    </div>
+                    <div class="settings-section" id="settings_section_notifications">
+                        <div class="settings"
+                             data-linked-section-id="settings_section_menu"
+                             hx-on:click="backToSettingsSection(this);">
+                            <span class="icon material-symbols-rounded">arrow_back_ios</span>
+                            <span class="text">Уведомления</span>
+                        </div>
+                        <hr>
+                        {{ cat_messages.random("Еще в разработке") }}
+<!--                        <div class="settings">-->
+<!--                            <span class="icon"></span>-->
+<!--                            <span class="text">Скрывать автора письма в уведомлении</span>-->
+<!--                        </div>-->
+<!--                        <div class="settings">-->
+<!--                            <span class="icon"></span>-->
+<!--                            <span class="text">Скрывать текст письма в уведомлении</span>-->
+<!--                        </div>-->
+                    </div>
+                    <div class="settings-section" id="settings_section_about">
+                        <div class="settings"
+                             data-linked-section-id="settings_section_menu"
+                             hx-on:click="backToSettingsSection(this);">
+                            <span class="icon material-symbols-rounded">arrow_back_ios</span>
+                            <span class="text">Что такое AnoCat</span>
+                        </div>
+                        <hr>
+                    </div>
+                    <div class="settings-section" id="settings_section_report_bug">
+                        <div class="settings"
+                             data-linked-section-id="settings_section_menu"
+                             hx-on:click="backToSettingsSection(this);">
+                            <span class="icon material-symbols-rounded">arrow_back_ios</span>
+                            <span class="text">Сообщить об ошибке</span>
+                        </div>
+                        <hr>
+                    </div>
+<!--                    SECOND LEVEL MENUS-->
+                    <div class="settings-section" id="settings_section_stop_words">
+                        <div class="settings"
+                             data-linked-section-id="settings_section_privacy"
+                             hx-on:click="backToSettingsSection(this);">
+                            <span class="icon material-symbols-rounded">arrow_back_ios</span>
+                            <span class="text">Стоп-слова</span>
+                        </div>
+                        <hr>
+                        <div class="stop-words-section">
+                            <div class="tip-block">
+                                <span class="icon material-symbols-rounded">question_mark</span>
+                                <p>Стоп-слова - это фильтр для входящих писем. Укажите слова которые вы бы не хотели видеть и письма содержащие их будут скрыты спойлером.</p>
+                            </div>
+                            <form class="stop-word-create-form"
+                                  id="stop_word_form"
+                                  hx-post="/htmx/v1/stop-words"
+                                  hx-trigger="submit"
+                                  hx-target="#stop_words_list"
+                                  hx-swap="afterbegin">
+                                <label>
+                                    <input type="text" name="stop_word_text" placeholder="Добавить стоп-слово" required>
+                                </label>
+                                <button class="create-button button icon-button" id="create_stop_word_button">
+                                    <span class="icon material-symbols-rounded">
+                                        text_increase
+                                    </span>
+                                    <img class="loader-icon" src="{{ static_url('/images/cat_loader.svg') }}" alt="loading...">
+                                </button>
+                            </form>
+                            <div class="stop-words-list" id="stop_words_list">
+                                <div class="loader-block">
+                                    <img src="{{ static_url('/images/cat_loader.svg') }}" alt="loading...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-section" id="settings_section_black_list">
+                        <div class="settings"
+                             data-linked-section-id="settings_section_privacy"
+                             hx-on:click="backToSettingsSection(this);">
+                            <span class="icon material-symbols-rounded">arrow_back_ios</span>
+                            <span class="text">Черный список</span>
+                        </div>
+                        <hr>
+                        <div class="black-list-section">
+                            <div class="black-list" id="black_list">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
+{% block scripts %}
+    <script>
+        const tg = window.Telegram.WebApp;
+        let mail_preview_container = document.getElementById("mail_preview_container")
+        let main_container = document.querySelector("main")
+        function showMailPreview(elem) {
+            mail_preview_container.classList.add("active")
+            main_container.classList.add("inactive")
+            tg.BackButton.show();
+            tg.onEvent('backButtonClicked', () => {
+                mail_preview_container.classList.remove("active")
+                main_container.classList.remove("inactive")
+                tg.BackButton.hide();
+                mail_preview_container.innerHTML = `
+<div class="mail-preview m3-elevation-light-3">
+    <div class="profile-info">
+        {{ avatars.skeleton() }}
+        <div class="profile-info__inner">
+            <div class="profile-info__inner__namedate-container">
+                <div class="name">
+                     Загрузка...
+                </div>
+                <div class="date">
+                     ...
+                </div>
+            </div>
+            <div class="status">
+                ...
+            </div>
+        </div>
+    </div>
+    <hr class="primary">
+    <span>
+        Загрузка...
+    </span>
+</div>
+                `
+            })
+        }
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'pop-up-notification';
+            const span = document.createElement('span');
+            span.textContent = message;
+            notification.appendChild(span);
+
+            const container = document.getElementById('pop_up_notifications_container');
+            container.prepend(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 1300);
+        }
+        function switchTabTo(clickedTab) {
+            if (clickedTab.classList.contains("active")) { return }
+            Telegram.WebApp.HapticFeedback.selectionChanged();
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            clickedTab.classList.add('active');
+            document.querySelectorAll('.tab-section').forEach(section => {
+                if (section.id === clickedTab.dataset.linkedSectionId) {
+                    section.classList.add('active')
+                } else {
+                    section.classList.remove('active')
+                }
+            })
+        }
+        function forwardSettingsSection(clickedSettings) {
+            Telegram.WebApp.HapticFeedback.selectionChanged();
+            clickedSettings.parentElement.classList.remove('active')
+            document.querySelector(
+                '.settings-section#'+clickedSettings.dataset.linkedSectionId
+            ).classList.add('active');
+        }
+        function backToSettingsSection(backToButton) {
+            Telegram.WebApp.HapticFeedback.selectionChanged();
+            backToButton.parentElement.classList.remove("active");
+            document.getElementById(backToButton.dataset.linkedSectionId).classList.add('active');
+        }
+
+        if (!navigator.share) {
+            document.getElementById("profile_share_button").classList.add("inactive");
+        }
+        function openShareMailToLinkDialog(elem) {
+            if (Telegram?.WebApp?.HapticFeedback?.impactOccurred) {
+                Telegram.WebApp.HapticFeedback.impactOccurred('light');
+            }
+            elem.classList.add('active');
+            try {
+                navigator.share({
+                    title: 'Мой профиль в AnoCat',
+                    text: 'Жду анонимным писем!',
+                    url: elem.dataset.value
+                }).then(() => {
+                    if (Telegram?.WebApp?.HapticFeedback?.impactOccurred) {
+                        Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
+                    }
+                    elem.classList.remove('active');
+                });
+            } catch (error) {
+                console.error('Ошибка при попытке поделиться:', error);
+            }
+        }
+        function copyMailToLinkToClipboard(elem) {
+            if (Telegram?.WebApp?.HapticFeedback?.impactOccurred) {
+                Telegram.WebApp.HapticFeedback.impactOccurred('light');
+            }
+            elem.classList.add('active');
+            showNotification("Ссылка скопирована")
+            navigator.clipboard.writeText(elem.dataset.value).then(() => {
+                setTimeout(() => {
+                    if (Telegram?.WebApp?.HapticFeedback?.impactOccurred) {
+                        Telegram.WebApp.HapticFeedback.impactOccurred('light');
+                    }
+                }, 100);
+                setTimeout(() => {
+                    if (Telegram?.WebApp?.HapticFeedback?.impactOccurred) {
+                        Telegram.WebApp.HapticFeedback.impactOccurred('light');
+                    }
+                    elem.classList.remove('active');
+                }, 500);
+            });
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const stop_word_form = document.getElementById('stop_word_form')
+            const inputs = stop_word_form.querySelectorAll("input, button");
+            stop_word_form.addEventListener('htmx:beforeRequest', function () {
+                inputs.forEach(el => el.disabled = true);
+            });
+            stop_word_form.addEventListener('htmx:afterRequest', function(evt) {
+                stop_word_form.reset(); // или form.querySelector('input[name="stop_word_text"]').value = ''
+                inputs.forEach(el => el.disabled = false);
+            });
+        });
+    </script>
+{% endblock %}

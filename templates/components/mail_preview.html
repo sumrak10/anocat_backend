@@ -1,0 +1,13 @@
+{% import "macros/profile_info.html" as profile_info %}
+
+<div class="mail-preview m3-elevation-light-3">
+    {% if is_inbox %}
+        {{ profile_info.inbox_mail_preview_profile(mail.sender, current_user.tz, mail.created_at, mail.is_anonymous) }}
+    {% else %}
+        {{ profile_info.sent_mail_preview_profile(mail.receiver, current_user.tz, mail.created_at) }}
+    {% endif %}
+    <hr class="primary">
+    <span class="text">
+        {{ mail.text }}
+    </span>
+</div>

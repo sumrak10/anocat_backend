@@ -1,0 +1,95 @@
+:root {
+    --primary: #FFB3AF;
+    --surface-tint: #FFB3AF;
+    --on-primary: #571D1D;
+    --primary-container: #733331;
+    --on-primary-container: #FFDAD7;
+    --secondary: #E7BDBA;
+    --on-secondary: #442928;
+    --secondary-container: #5D3F3D;
+    --on-secondary-container: #FFDAD7;
+    --tertiary: #E2C28C;
+    --on-tertiary: #412D05;
+    --tertiary-container: #594319;
+    --on-tertiary-container: #FFDEA9;
+    --error: #FFB4AB;
+    --on-error: #690005;
+    --error-container: #93000A;
+    --on-error-container: #FFDAD6;
+    --background: #1A1111;
+    --on-background: #F0DEDD;
+    --surface: #1A1111;
+    --on-surface: #F0DEDD;
+    --surface-variant: #534342;
+    --on-surface-variant: #D8C1C0;
+    --outline: #A08C8B;
+    --outline-variant: #534342;
+    --shadow: #000000;
+    --scrim: #000000;
+    --inverse-surface: #F0DEDD;
+    --inverse-on-surface: #382E2D;
+    --inverse-primary: #904A47;
+    --primary-fixed: #FFDAD7;
+    --on-primary-fixed: #3B080A;
+    --primary-fixed-dim: #FFB3AF;
+    --on-primary-fixed-variant: #733331;
+    --secondary-fixed: #FFDAD7;
+    --on-secondary-fixed: #2C1514;
+    --secondary-fixed-dim: #E7BDBA;
+    --on-secondary-fixed-variant: #5D3F3D;
+    --tertiary-fixed: #FFDEA9;
+    --on-tertiary-fixed: #271900;
+    --tertiary-fixed-dim: #E2C28C;
+    --on-tertiary-fixed-variant: #594319;
+    --surface-dim: #1A1111;
+    --surface-bright: #423736;
+    --surface-container-lowest: #140C0C;
+    --surface-container-low: #231919;
+    --surface-container: #271D1D;
+    --surface-container-high: #322827;
+    --surface-container-highest: #3D3231;
+
+    --border-radius-m: 8px;
+}
+
+
+/*######################*/
+/*                      */
+/*   background-color   */
+/*                      */
+/*######################*/
+
+.bgc--background {
+    background-color: var(--background);
+}
+.bgc--primary-container {
+    background-color: var(--primary-container);
+}
+.bgc--on-primary-container {
+    background-color: var(--on-background);
+}
+
+
+/*###########*/
+/*           */
+/*   color   */
+/*           */
+/*###########*/
+.color--on-primary-container {
+    color: var(--on-primary-container)
+}
+.color--outline {
+    color: var(--outline);
+}
+
+/*############*/
+/*            */
+/*   border   */
+/*            */
+/*############*/
+.border--primary {
+    border: 2px solid var(--primary);
+}
+.border--on-primary-container {
+    border: 2px solid var(--on-primary-container);
+}

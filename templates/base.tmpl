@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}AnoCat{% endblock %}</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ static_url('/favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ static_url('/favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ static_url('/favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ static_url('/favicon/site.webmanifest') }}">
+    <link rel="stylesheet" href="{{ static_url('/css/reset.css', add_hash=True) }}">
+    <link rel="stylesheet" href="{{ static_url('/css/dark_theme_colors.css', add_hash=True) }}">
+    <link rel="stylesheet" href="{{ static_url('/css/style.css', add_hash=True) }}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@40,300,1,0&icon_names=account_circle,arrow_back_ios,arrow_forward_ios,arrow_upward,bug_report,clear,domino_mask,link,match_word,notifications_none,question_mark,settings,share,shield,text_increase" />
+<!--    <script src="https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js" crossorigin="anonymous"></script>-->
+    <script src="{{ static_url('/libs/htmx.min.js') }}"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        function redirect_for_unsupported_page() {
+            window.location.href = "https://t.me/AnoCatBot";
+        }
+        if (window.Telegram?.WebApp) {
+            console.log("Telegram WebApp is available");
+        } else {
+            redirect_for_unsupported_page();
+        }
+    </script>
+    {% block styles %}
+    {% endblock %}
+</head>
+<body hx-boost="true">
+    {% block content %}
+    {% endblock %}
+    <script>
+        document.body.addEventListener('htmx:configRequest', (event) => {
+            event.detail.headers['Authorization'] = `tma ${window.Telegram.WebApp.initData}`;
+            event.detail.headers['X-Timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        });
+    </script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

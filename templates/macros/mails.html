@@ -1,0 +1,81 @@
+{% import "macros/avatars.html" as avatars %}
+
+{% macro inbox_mail(current_user, mail) -%}
+    <div class="mail {% if mail.is_blocked_by_stop_words %}blocked{% endif %}"
+         data-mail-id="{{ mail.id }}"
+         hx-get="/htmx/v1/mails/inbox/{{ mail.id }}/preview"
+         hx-target="#mail_preview_container"
+         hx-swap="innerHTML"
+         hx-on:click="showMailPreview(this);">
+        <div class="mail__profile">
+            {% if mail.is_anonymous %}
+                {{ avatars.anonym(mail.sender_id) }}
+            {% else %}
+                {{ avatars.user(mail.sender.photo_url) }}
+            {% endif %}
+            <div class="mail__profile__info">
+                <div class="mail__profile__info__data">
+                    <div class="mail__profile__info__data__name">
+                        <span>
+                            {% if mail.is_anonymous %}
+                                Аноним
+                            {% else %}
+                                {{ mail.sender.first_name }} {{mail.sender.last_name }}
+                            {% endif %}
+                        </span>
+                        {% if mail.is_read %}
+                            <span class="material-symbols-rounded color--on-primary-container">
+                                circle
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div class="mail__profile__info__data__date">
+                        <span>{{ humanize_datetime_ru(mail.created_at, current_user.tz) }}</span>
+                    </div>
+                </div>
+                <div class="mail__profile__info__text" data-text="{{ mail.text }}">
+                    {% if mail.is_blocked_by_stop_words %}
+                        <span class="mail__profile__info__text__blocked">
+                            Содержит стоп-слова.
+                        </span>
+                    {% else %}
+                        {{ mail.text }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endmacro %}
+
+{% macro sent_mail(current_user, mail) -%}
+    <div class="mail"
+         data-mail-id="{{ mail.id }}"
+         hx-get="/htmx/v1/mails/sent/{{ mail.id }}/preview"
+         hx-target="#mail_preview_container"
+         hx-swap="innerHTML"
+         hx-on:click="showMailPreview(this, );">>
+        <div class="mail__profile">
+            <img src="{{ mail.receiver.photo_url }}" alt="avatar" class="mail__profile__avatar">
+            <div class="mail__profile__info">
+                <div class="mail__profile__info__data">
+                    <div class="mail__profile__info__data__name">
+                        <span>
+                            {{ mail.receiver.first_name }} {{mail.receiver.last_name }}
+                        </span>
+                        {% if mail.is_read %}
+                            <span class="material-symbols-rounded color--on-primary-container">
+                                circle
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div class="mail__profile__info__data__date">
+                        <span>{{ humanize_datetime_ru(mail.created_at, current_user.tz) }}</span>
+                    </div>
+                </div>
+                <div class="mail__profile__info__text">
+                    {{ mail.text }}
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endmacro %}

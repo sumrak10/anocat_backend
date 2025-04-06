@@ -1,0 +1,233 @@
+{% extends "base.tmpl" %}
+{% import "macros/avatars.html" as avatars %}
+
+{% block styles %}
+{% endblock %}
+{% block content %}
+<main>
+    <header>
+        <div class="mailto-profile"
+             hx-get="/htmx/v1/users/{{ mailto_user_id }}/profile"
+             hx-trigger="load once"
+             hx-swap="innerHTML">
+            <a href="/" class="backto-link" id="backto-link"><span class="icon material-symbols-rounded">arrow_back_ios</span></a>
+            <div class="profile-info">
+                {{ avatars.skeleton() }}
+                <div class="profile-info__inner">
+                    <div class="name">
+                         Загрузка...
+                    </div>
+                    <div class="status">
+                        ...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <form class="mailto-form">
+        <div class="mailto-form__text">
+            <div class="mailto-form__input__header">
+                <p class="title">Письмо</p>
+                <div class="counter-container" id="mailto_form_text__counter">
+                    <span class="changing">0</span>
+                    <span>/</span>
+                    <span>{{ max_mail_text_length }}</span>
+                </div>
+            </div>
+            <label>
+                <textarea class="text"
+                          name="text"
+                          id="mailto_form_text"
+                          placeholder="Текст вашего письма..."></textarea>
+            </label>
+        </div>
+        <div class="mailto-form__settings">
+            <div class="text-side">
+                <span class="icon material-symbols-rounded">domino_mask</span>
+                <span class="text">Отправить анонимно</span>
+            </div>
+            <label class="switch">
+                <input class="switch__input" type="checkbox" name="is_anonymous" id="mailto_form_is_anonymous" checked>
+                <span class="switch__slider"></span>
+            </label>
+        </div>
+    </form>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tg = window.Telegram.WebApp;
+
+        const mailto_form_text = document.getElementById("mailto_form_text")
+        const mailto_form_is_anonymous = document.getElementById("mailto_form_is_anonymous")
+        const counter_container = document.getElementById("mailto_form_text__counter")
+        const counter = counter_container.querySelector(".changing")
+
+        tg.setBottomBarColor("#1A1111")
+        tg.BackButton.show();
+        tg.MainButton.show();
+        tg.onEvent('backButtonClicked', () => {
+            htmx.ajax('GET', '/', {boosted: true});
+            history.pushState({}, '', '/');
+            tg.MainButton.hide();
+            tg.BackButton.hide();
+        })
+
+        if (tg.initDataUnsafe.user.id.toString() === "{{ mailto_user_id }}") {
+            mainButtonSelfSendingError()
+            mailto_form_text.disabled = true;
+            mailto_form_text.placeholder = 'Нельзя писать письма самому себе!';
+            return
+        } else {
+            mainButtonEmptyText()
+        }
+
+
+        mailto_form_is_anonymous.addEventListener("click", () => {
+            Telegram.WebApp.HapticFeedback.selectionChanged();
+        })
+        mailto_form_text.addEventListener("keyup", on_mailto_form_text_change)
+        function on_mailto_form_text_change() {
+            let val = mailto_form_text.value.length
+            if (val > parseInt("{{ max_mail_text_length }}")) {
+                mainButtonValidationError()
+                counter_container.classList.add("validate-error")
+            } else if (val === 0) {
+                mainButtonEmptyText()
+                counter_container.classList.add("validate-error")
+            } else {
+                mainButtonReadyToSend()
+                counter_container.classList.remove("validate-error")
+            }
+            counter.innerText = val
+        }
+
+
+        // --------------------TELEGRAM EVENTS
+        tg.onEvent('mainButtonClicked', () => {
+            if (tg.MainButton.text === "Отправить") {
+                tg.MainButton.showProgress();
+                mainButtonSendingProcess()
+                fetch('/htmx/v1/mails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `tma ${window.Telegram.WebApp.initData}`,
+                    },
+                    body: JSON.stringify({
+                        receiver_id: "{{ mailto_user_id }}",
+                        text: mailto_form_text.value,
+                        is_anonymous: mailto_form_is_anonymous.checked
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Ошибка при отправке письма");
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    mailto_form_text.value = ""
+                    tg.MainButton.hideProgress();
+                    mainButtonBackTo(true)
+                    console.log("Успешно отправлено:", data);
+                })
+                .catch(error => {
+                    mailto_form_text.value = ""
+                    tg.MainButton.hideProgress();
+                    mainButtonBackTo(false)
+                    console.error("Ошибка:", error);
+                });
+            } else if (tg.MainButton.text === "Письмо отправлено" || tg.MainButton.text === "Ошибка, попробуйте позже") {
+                htmx.ajax('GET', '/', {boosted: true});
+                history.pushState({}, '', '/');
+                tg.MainButton.hide();
+                tg.BackButton.hide();
+            }
+        })
+
+        // --------------------UTILS
+        // ERRORS
+        function mainButtonEmptyText () {
+            let text = "Письмо пустое"
+            if (tg.MainButton.text !== text) {
+                tg.MainButton.setParams({
+                    text: text,
+                    color: "#93000A",
+                    text_color: "#FFB4AB",
+                    is_active: false,
+                });
+            }
+        }
+        function mainButtonValidationError () {
+            let text = "Много букаф"
+            if (tg.MainButton.text !== text) {
+                tg.MainButton.setParams({
+                    text: text,
+                    color: "#93000A",
+                    text_color: "#FFB4AB",
+                    is_active: false,
+                });
+            }
+        }
+        function mainButtonSelfSendingError () {
+            let text = "Самому себе?"
+            if (tg.MainButton.text !== text) {
+                tg.MainButton.setParams({
+                    text: text,
+                    color: "#93000A",
+                    text_color: "#FFB4AB",
+                    is_active: false,
+                });
+            }
+        }
+        // LOADING
+        function mainButtonSendingProcess () {
+            let text = "Отправляем..."
+            if (tg.MainButton.text !== text) {
+                tg.MainButton.setParams({
+                    text: text,
+                    color: "#0aad00",
+                    text_color: "#ffffff",
+                    is_active: false,
+                });
+            }
+        }
+        // ACTIVE
+        function mainButtonReadyToSend () {
+            let text = "Отправить"
+            if (tg.MainButton.text !== text) {
+                tg.MainButton.setParams({
+                    text: text,
+                    color: "#0aad00",
+                    text_color: "#ffffff",
+                    is_active: true,
+                });
+            }
+        }
+        function mainButtonBackTo(successfully) {
+            let text = ""
+            let color = ""
+            let text_color = ""
+            if (successfully) {
+                text = "Письмо отправлено"
+                color = "#FFB3AF"
+                text_color = "#571D1D"
+            } else {
+                text = "Ошибка, попробуйте позже"
+                color = "#93000A"
+                text_color = "#FFB4AB"
+            }
+            if (tg.MainButton.text !== text) {
+                tg.MainButton.setParams({
+                    text: text,
+                    color: color,
+                    text_color: text_color,
+                    is_active: true,
+                });
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% import "macros/mails.html" as mails %}
+{% import "macros/cat_messages.html" as cat_messages %}
+
+{% if mails_page["items"]|length == 0 %}
+{{ cat_messages.random("Кажется ничего не нашлось") }}
+{% else %}
+    {% for mail in mails_page["items"] %}
+        {{ mails.inbox_mail(current_user, mail) }}
+    {% endfor %}
+    {% if mails_page.page*mails_page.size < mails_page.count %}
+        <div class="mail__infinitive-loader"
+            hx-get="/htmx/v1/mails/inbox?page={{ mails_page.page+1 }}&size={{ mails_page.size }}"
+            hx-trigger="intersect "
+            hx-swap="outerHTML">
+            <img class="loader-icon" src="{{ static_url('/images/cat_loader.svg') }}" alt="loading...">
+        </div>
+    {% else %}
+        {{ cat_messages.random("Больше писем нет") }}
+    {% endif %}
+{% endif %}

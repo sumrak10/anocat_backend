@@ -1,0 +1,12 @@
+{% import "macros/avatars.html" as avatars %}
+{% for blocked_user in black_list %}
+    <div class="black-list-item"
+         data-blocked-id="{{ blocked_user.id }}"
+         hx-delete="/htmx/v1/black_list/{{ blocked_user.id }}"
+         hx-target="this"
+         hx-swap="delete">
+        <img src="{{ blocked_user.photo_url }}" alt="">
+        <span class="text">{{ blocked_user.first_name }} {{ blocked_user.last_name }}</span>
+        <span class="icon material-symbols-rounded">clear</span>
+    </div>
+{% endfor %}

@@ -1,0 +1,80 @@
+{% import "macros/avatars.html" as avatars %}
+{% import "macros/mails.html" as mails %}
+
+{% macro profile(user) -%}
+    <div class="profile-info" id="profile" data-id="{{ user.id }}">
+        {{ avatars.user(user.photo_url) }}
+        <div class="profile-info__inner">
+            <div class="name">
+                {{ user.first_name }} {{user.last_name }}
+            </div>
+            <div class="status">
+                {% if user.username %}
+                    @{{ user.username }}
+                {% else %}
+                    #{{ user.id }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{%- endmacro %}
+
+{% macro mailto_profile(user) -%}
+    <div class="profile-info" id="mailto_profile" data-id="{{ user.id }}">
+        {{ avatars.user(user.photo_url) }}
+        <div class="profile-info__inner">
+            <div class="name">
+                {{ user.first_name }} {{user.last_name }}
+            </div>
+            <div class="status">
+                Адресат
+            </div>
+        </div>
+    </div>
+{%- endmacro %}
+
+{% macro inbox_mail_preview_profile(user, current_user_tz, created_at, is_anonymous) -%}
+    <div class="profile-info">
+        {% if is_anonymous %}
+            {{ avatars.anonym(user.id) }}
+        {% else %}
+            {{ avatars.user(user.photo_url) }}
+        {% endif %}
+        <div class="profile-info__inner">
+            <div class="profile-info__inner__namedate-container">
+                <span class="name">
+                    {% if is_anonymous %}
+                        Аноним
+                    {% else %}
+                        {{ user.first_name }} {{user.last_name }}
+                    {% endif %}
+                </span>
+                <span class="date">
+                    {{ humanize_datetime_ru(created_at, current_user_tz) }}
+                </span>
+            </div>
+            <div class="status">
+                Автор письма
+            </div>
+        </div>
+    </div>
+{%- endmacro %}
+
+{% macro sent_mail_preview_profile(user, current_user_tz, created_at) -%}
+    <div class="profile-info">
+        {{ avatars.user(user.photo_url) }}
+        <div class="profile-info__inner">
+            <div class="profile-info__inner__namedate-container">
+                <span class="name">
+                    {{ user.first_name }} {{user.last_name }}
+                </span>
+                <span class="date">
+                    {{ humanize_datetime_ru(created_at, current_user_tz) }}
+                </span>
+            </div>
+            <div class="status">
+                Получатель письма
+            </div>
+        </div>
+    </div>
+{%- endmacro %}
