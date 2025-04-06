@@ -67,12 +67,14 @@
         tg.setBottomBarColor("#1A1111")
         tg.BackButton.show();
         tg.MainButton.show();
-        tg.onEvent('backButtonClicked', () => {
+        function backButtonBoostToIndex() {
             htmx.ajax('GET', '/', {boosted: true});
             history.pushState({}, '', '/');
             tg.MainButton.hide();
             tg.BackButton.hide();
-        })
+            tg.offEvent('backButtonClicked', backButtonBoostToIndex)
+        }
+        tg.onEvent('backButtonClicked', backButtonBoostToIndex)
 
         if (tg.initDataUnsafe.user.id.toString() === "{{ mailto_user_id }}") {
             mainButtonSelfSendingError()

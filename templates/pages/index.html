@@ -289,15 +289,11 @@
         const tg = window.Telegram.WebApp;
         let mail_preview_container = document.getElementById("mail_preview_container")
         let main_container = document.querySelector("main")
-        function showMailPreview(elem) {
-            mail_preview_container.classList.add("active")
-            main_container.classList.add("inactive")
-            tg.BackButton.show();
-            tg.onEvent('backButtonClicked', () => {
-                mail_preview_container.classList.remove("active")
-                main_container.classList.remove("inactive")
-                tg.BackButton.hide();
-                mail_preview_container.innerHTML = `
+        function backButtonCloseMailPreview() {
+            mail_preview_container.classList.remove("active")
+            main_container.classList.remove("inactive")
+            tg.BackButton.hide();
+            mail_preview_container.innerHTML = `
 <div class="mail-preview m3-elevation-light-3">
     <div class="profile-info">
         {{ avatars.skeleton() }}
@@ -320,8 +316,14 @@
         Загрузка...
     </span>
 </div>
-                `
-            })
+            `
+            tg.offEvent('backButtonClicked', backButtonCloseMailPreview)
+        }
+        function showMailPreview(elem) {
+            mail_preview_container.classList.add("active")
+            main_container.classList.add("inactive")
+            tg.BackButton.show();
+            tg.onEvent('backButtonClicked', backButtonCloseMailPreview)
         }
         function showNotification(message) {
             const notification = document.createElement('div');
