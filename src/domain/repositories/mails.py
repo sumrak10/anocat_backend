@@ -48,7 +48,6 @@ class MailsRepository(AbstractRepository):
                 MailModel.is_anonymous,
                 MailModel.is_read,
                 MailModel.created_at,
-                MailModel.updated_at,
                 self._get_jsonb_build_object(user_is_receiver)
             )
         )
@@ -113,7 +112,6 @@ class MailsRepository(AbstractRepository):
                 MailModel.is_anonymous,
                 MailModel.is_read,
                 MailModel.created_at,
-                MailModel.updated_at,
                 self._get_jsonb_build_object(user_is_receiver)
             )
         )
@@ -182,7 +180,6 @@ class MailsRepository(AbstractRepository):
             is_anonymous=row["is_anonymous"],
             is_read=row["is_read"],
             created_at=row["created_at"],
-            updated_at=row["updated_at"],
             sender=row["sender"],
         )
 
@@ -194,6 +191,5 @@ class MailsRepository(AbstractRepository):
             text=row["text"],
             is_read=row["is_read"],
             created_at=row["created_at"],
-            updated_at=row["updated_at"],
             receiver=row["receiver"],
         )

@@ -46,7 +46,6 @@ class UsersRepository(AbstractRepository):
             select(
                 UserModel.is_active,
                 UserModel.created_at,
-                UserModel.updated_at,
             )
             .where(
                 UserModel.id == telegram_user.id
@@ -60,7 +59,6 @@ class UsersRepository(AbstractRepository):
             **telegram_user.model_dump(),
             is_active=res["is_active"],
             created_at=res["created_at"],
-            updated_at=res["updated_at"],
         )
 
     async def get_user_info_by_id(self, user_id: int) -> UserInfoDTO | None:
