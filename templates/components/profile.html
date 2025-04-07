@@ -13,7 +13,8 @@
     <div class="button icon-button"
          id="profile_share_button"
          data-value="{{ user_mailto_action_link }}"
-         hx-on:click="openShareMailToLinkDialog(this)">
+         hx-on:click="openShareMailToLinkDialog(this)"
+         hx-on:load="hideShareMailToLinkDialogIfNotSupported(this)">
         <span class="icon material-symbols-rounded">
             share
         </span>

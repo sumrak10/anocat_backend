@@ -1,7 +1,7 @@
 import datetime
 
 from pydantic import BaseModel
-from sqlalchemy import DateTime
+from sqlalchemy import DateTime, func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
@@ -13,15 +13,9 @@ class TimestampMixin(Base):
 
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime,
-        default=datetime.datetime.now(datetime.UTC).replace(tzinfo=None)
-    )
-    updated_at: Mapped[datetime.datetime | None] = mapped_column(
-        DateTime,
-        default=datetime.datetime.now(datetime.UTC).replace(tzinfo=None),
-        onupdate=datetime.datetime.now(datetime.UTC).replace(tzinfo=None),
+        server_default=func.now()
     )
 
 
 class TimestampDTOMixin(BaseModel):
     created_at: datetime.datetime
-    updated_at: datetime.datetime | None
