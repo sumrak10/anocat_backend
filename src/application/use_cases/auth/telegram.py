@@ -37,7 +37,11 @@ class TelegramAuthUseCase:
 
         init_data_dto = await cls.parse_init_data(init_data_raw)
 
-        user_dto = await cls._authenticate(init_data_dto.user, create_if_not_exists=True)
+        user_dto = await cls._authenticate(
+            init_data_dto.user,
+            create_if_not_exists=True,
+            update_if_exists=True,
+        )
 
         return user_dto
 
@@ -55,6 +59,7 @@ class TelegramAuthUseCase:
                 photo_url=None,
             ),
             create_if_not_exists=True,
+            update_if_exists=False,
         )
 
     @classmethod
@@ -77,11 +82,14 @@ class TelegramAuthUseCase:
         telegram_user: TelegramUserDTO,
         *,
         create_if_not_exists: bool = False,
+        update_if_exists: bool = False,
     ) -> UserDTO:
         session = async_session_maker()
         users_repo = UsersRepository(session)
         if create_if_not_exists and not await users_repo.is_exists(telegram_user.id):
             await users_repo.create_one_from_telegram_user(telegram_user)
+        elif update_if_exists:
+            await users_repo.update_one_from_telegram_user(telegram_user)
         user_dto = await users_repo.pull_in_db_part_data(telegram_user)
         await session.commit()
         await session.close()
