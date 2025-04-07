@@ -3,11 +3,13 @@ import os
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
+from src.config.app import app_settings
+
 
 class LoggerConfig:
     LOG_DIR = Path('./logs')  # Относительный путь для удобства
     LOG_FILE = 'application.log'
-    LOG_LEVEL = int(os.getenv('LOGGING_LEVEL', logging.DEBUG))
+    LOG_LEVEL = app_settings.LOGGING_LEVEL
     MAX_LOG_SIZE = 5 * 1024 * 1024  # 5 MB
     BACKUP_COUNT = 5
 

@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     )
 
     ENVIRONMENT: str
+    LOGGING_LEVEL: int = 10
     URL: str
     VERSION_MAJOR: int
     VERSION_MINOR: int
