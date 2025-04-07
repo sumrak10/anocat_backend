@@ -17,7 +17,10 @@ router = Router()
 async def start_handler(message: types.Message):
     logging.info(f'Start: {message.from_user.id} {message.from_user.full_name} {time.asctime()}. Message: {message}')
 
-    uow = IUnitOfWork(current_user=await TelegramAuthUseCase.authenticate_by_message(message))
+    uow = IUnitOfWork(
+        current_user=await TelegramAuthUseCase.authenticate_by_message(message),
+        x_timezone='Asia/Tashkent',
+    )
     async with uow:
         arg_action, arg_data = parse_start_command_args(message.text)
         if arg_action is None:
