@@ -42,11 +42,8 @@ async def lifespan(app_: FastAPI) -> AsyncIterator[None]:  # noqa: ARG001
 def create_app() -> FastAPI:
     sentry_sdk.init(
         dsn=sentry_settings.DSN,
-        # Add data like request headers and IP for users,
-        # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+        environment=app_settings.ENVIRONMENT,
         send_default_pii=True,
-        # Set traces_sample_rate to 1.0 to capture 100%
-        # of transactions for tracing.
         traces_sample_rate=sentry_settings.TRACES_SAMPLE_RATE,
     )
 
