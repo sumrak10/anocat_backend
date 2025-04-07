@@ -4,8 +4,12 @@
     </div>
 {%- endmacro %}
 {% macro user(photo_url) -%}
-    <div class="avatar">
-        <img src="{{ photo_url }}" alt="avatar">
+    <div class="avatar anonym-avatar-bg-{{ user_id % 10 }}">
+        {% if photo_url %}
+            <img src="{{ photo_url }}" alt="avatar">
+        {% else %}
+            <img src="/static/images/anonym_avatar.webp" alt="avatar">
+        {% endif %}
     </div>
 {%- endmacro %}
 {% macro skeleton() -%}

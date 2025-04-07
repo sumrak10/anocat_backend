@@ -60,7 +60,7 @@
                 <div class="mail__profile__info__data">
                     <div class="mail__profile__info__data__name">
                         <span>
-                            {{ mail.receiver.first_name }}{% if mail.sender.last_name %} {{ mail.sender.last_name }}{% endif %}
+                            {{ mail.receiver.first_name }}{% if mail.receiver.last_name %} {{ mail.receiver.last_name }}{% endif %}
                         </span>
                         {% if mail.is_read %}
                             <span class="material-symbols-rounded color--on-primary-container">
