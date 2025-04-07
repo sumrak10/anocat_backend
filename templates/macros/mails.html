@@ -11,7 +11,7 @@
             {% if mail.is_anonymous %}
                 {{ avatars.anonym(mail.sender_id) }}
             {% else %}
-                {{ avatars.user(mail.sender.photo_url) }}
+                {{ avatars.user(mail.sender.photo_url, mail.sender.user_id) }}
             {% endif %}
             <div class="mail__profile__info">
                 <div class="mail__profile__info__data">
@@ -55,7 +55,7 @@
          hx-swap="innerHTML"
          hx-on:click="showMailPreview(this, );">
         <div class="mail__profile">
-            <img src="{{ mail.receiver.photo_url }}" alt="avatar" class="mail__profile__avatar">
+            {{ avatars.user(mail.receiver.photo_url, mail.receiver.user_id) }}
             <div class="mail__profile__info">
                 <div class="mail__profile__info__data">
                     <div class="mail__profile__info__data__name">
