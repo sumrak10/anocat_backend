@@ -82,8 +82,6 @@ class TelegramAuthUseCase:
         users_repo = UsersRepository(session)
         if create_if_not_exists and not await users_repo.is_exists(telegram_user.id):
             await users_repo.create_one_from_telegram_user(telegram_user)
-        else:
-            await users_repo.update_one_from_telegram_user(telegram_user)
         user_dto = await users_repo.pull_in_db_part_data(telegram_user)
         await session.commit()
         await session.close()
