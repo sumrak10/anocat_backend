@@ -8,7 +8,7 @@
         {% if photo_url %}
             <img src="{{ photo_url }}" alt="avatar">
         {% else %}
-            <img src="/static/images/avatars/cat-{{ user_id }}.webp" alt="avatar">
+            <img src="/static/images/avatars/cat-{{ user_id % 10 }}.webp" alt="avatar">
         {% endif %}
     </div>
 {%- endmacro %}
